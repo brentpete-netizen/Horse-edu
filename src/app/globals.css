@@ -1,0 +1,21 @@
+@import "tailwindcss";
+
+:root {
+  --background: #e8efe6;
+  --foreground: #152018;
+  --muted: #3e4f42;
+  --brand: #1f4d36;
+  --brand-hover: #163a29;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-sans);
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+}
