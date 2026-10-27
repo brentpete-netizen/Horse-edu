@@ -1,10 +1,11 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { connection } from "next/server";
 import type { ReactNode } from "react";
 import { getLocalReadyBreedBySlug } from "@/lib/breeds/content";
 import { getReadyBreedBySlug } from "@/lib/breeds/notion";
+import { allowNotionBreeds } from "@/lib/site-mode";
+import { colorSlugFromName } from "@/lib/colors/catalog";
 
 function Section({
   title,
@@ -16,7 +17,7 @@ function Section({
   if (!children) return null;
   return (
     <section className="mt-10">
-      <h2 className="text-sm font-semibold uppercase tracking-wide text-[var(--brand)]">
+      <h2 className="font-display text-sm font-semibold uppercase tracking-wide text-[var(--brand)]">
         {title}
       </h2>
       <div className="mt-3 text-base leading-relaxed text-[var(--foreground)]">
@@ -26,7 +27,7 @@ function Section({
   );
 }
 
-function MetaRow({ label, value }: { label: string; value: string | null }) {
+function MetaRow({ label, value }: { label: string; value: ReactNode }) {
   if (!value) return null;
   return (
     <div className="flex flex-col gap-0.5 sm:flex-row sm:gap-3">
@@ -37,48 +38,11 @@ function MetaRow({ label, value }: { label: string; value: string | null }) {
 }
 
 export async function BreedDetail({ slug }: { slug: string }) {
-  await connection();
-  const { breed: notionBreed, status, message } =
-    await getReadyBreedBySlug(slug);
-  const breed = notionBreed ?? (await getLocalReadyBreedBySlug(slug));
+  let breed = await getLocalReadyBreedBySlug(slug);
 
-  if (!breed && status === "missing_credentials") {
-    return (
-      <div className="rounded-md border border-[var(--brand)]/15 bg-white/40 px-5 py-6 text-[var(--muted)]">
-        <p className="font-medium text-[var(--foreground)]">
-          Breed not found
-        </p>
-        <p className="mt-2 text-sm leading-relaxed">
-          {message ??
-            "No local export for this slug, and Notion is not connected."}
-        </p>
-        <Link
-          href="/breeds"
-          className="mt-4 inline-block text-sm text-[var(--brand)] hover:underline"
-        >
-          Back to breeds
-        </Link>
-      </div>
-    );
-  }
-
-  if (!breed && status === "error") {
-    return (
-      <div className="rounded-md border border-red-900/15 bg-white/40 px-5 py-6 text-[var(--muted)]">
-        <p className="font-medium text-[var(--foreground)]">
-          Could not load this breed
-        </p>
-        <p className="mt-2 text-sm leading-relaxed">
-          {message ?? "Try again later."}
-        </p>
-        <Link
-          href="/breeds"
-          className="mt-4 inline-block text-sm text-[var(--brand)] hover:underline"
-        >
-          Back to breeds
-        </Link>
-      </div>
-    );
+  if (!breed && allowNotionBreeds()) {
+    const { breed: notionBreed } = await getReadyBreedBySlug(slug);
+    breed = notionBreed;
   }
 
   if (!breed) {
@@ -88,14 +52,35 @@ export async function BreedDetail({ slug }: { slug: string }) {
   const uses = breed.primaryUses.length
     ? breed.primaryUses.join(", ")
     : null;
-  const colors = breed.typicalColors.length
-    ? breed.typicalColors.join(", ")
-    : null;
+
+  const colorLinks =
+    breed.typicalColors.length > 0 ? (
+      <span className="flex flex-wrap gap-x-2 gap-y-1">
+        {breed.typicalColors.map((name, i) => {
+          const cslug = colorSlugFromName(name);
+          return (
+            <span key={name}>
+              {cslug ? (
+                <Link
+                  href={`/colors/${cslug}/`}
+                  className="text-[var(--brand)] underline-offset-2 hover:underline"
+                >
+                  {name}
+                </Link>
+              ) : (
+                name
+              )}
+              {i < breed.typicalColors.length - 1 ? "," : ""}
+            </span>
+          );
+        })}
+      </span>
+    ) : null;
 
   return (
     <article>
       <Link
-        href="/breeds"
+        href="/breeds/"
         className="text-sm text-[var(--muted)] transition-colors hover:text-[var(--brand)]"
       >
         ← All breeds
@@ -105,7 +90,7 @@ export async function BreedDetail({ slug }: { slug: string }) {
         <p className="text-sm text-[var(--muted)]">
           {[breed.type, breed.origin].filter(Boolean).join(" · ")}
         </p>
-        <h1 className="mt-2 text-4xl font-semibold tracking-tight text-[var(--brand)] sm:text-5xl">
+        <h1 className="font-display mt-2 text-4xl font-semibold tracking-tight text-[var(--brand)] sm:text-5xl">
           {breed.name}
         </h1>
         {breed.shortDescription && (
@@ -131,7 +116,7 @@ export async function BreedDetail({ slug }: { slug: string }) {
       <dl className="mt-10 space-y-3 border-y border-[var(--brand)]/10 py-6">
         <MetaRow label="Temperament" value={breed.temperament} />
         <MetaRow label="Primary uses" value={uses} />
-        <MetaRow label="Typical colors" value={colors} />
+        <MetaRow label="Typical colors" value={colorLinks} />
         <MetaRow label="Height (hands)" value={breed.heightHands} />
       </dl>
 

@@ -1,43 +1,54 @@
 # Horse Edu
 
-Next.js + Tailwind site for horse education. Breed content is loaded from the Notion **Horse Breeds** database (only rows with **Status = Ready**).
+Next.js educational site for horse **breeds**, **coat colors**, **distinctive features**, and a **colors quiz**.
+
+## Hosting
+
+| Target | How |
+| --- | --- |
+| **GitHub Pages** (primary) | On push to `main`, Actions builds with `GITHUB_PAGES=true` (static export + `basePath=/Horse-edu`) and deploys `out/`. Site: `https://brentpete-netizen.github.io/Horse-edu/` |
+| **Vercel** (follow-on) | Import the repo; leave `GITHUB_PAGES` unset so there is no `basePath`. Set `NOTION_API_KEY` to load live Ready breeds; otherwise local `content/breeds` is used. |
+
+Notion remains the drafting source of truth. **Pages builds use committed local content** under `content/breeds/`. Run `/prepare-site-breed` and commit after marking breeds Ready.
+
+Enable Pages: repo **Settings → Pages → Source: GitHub Actions**.
 
 ## Getting started
 
 ```bash
 npm install
-cp .env.example .env.local
-# edit .env.local — add NOTION_API_KEY after connecting the integration
+cp .env.example .env.local   # optional Notion for local/Vercel
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
 
-## Notion setup
+### Static Pages build locally
 
-1. Create an [internal integration](https://www.notion.so/my-integrations) and copy its secret.
-2. Open the [Horse Breeds](https://app.notion.com/p/6da68778bc0d4252a72219ad9f7ca46b) database → **•••** → **Connections** → add the integration.
-3. Set secrets (see `.env.example`):
+```bash
+# Unix
+GITHUB_PAGES=true npm run build
 
-| Variable | Required | Notes |
-| --- | --- | --- |
-| `NOTION_API_KEY` | Yes (for live data) | Integration secret |
-| `NOTION_DATABASE_ID` | No | Defaults documented in `.env.example` |
-| `NOTION_DATA_SOURCE_ID` | No | Defaults to the Horse Breeds collection id |
+# Windows PowerShell
+$env:GITHUB_PAGES="true"; npm run build
+```
 
-Without `NOTION_API_KEY`, `npm run build` still succeeds. Breed pages soft-fail at runtime with a clear “not connected” message instead of crashing.
-
-Mark breeds **Ready** in Notion to publish them on `/breeds` and `/breeds/[slug]`.
-
-## Scripts
-
-- `npm run dev` — development server
-- `npm run build` — production build
-- `npm run start` — serve production build
-- `npm run lint` — ESLint
+Output is in `out/`.
 
 ## Routes
 
-- `/` — landing
-- `/breeds` — Ready breeds index
-- `/breeds/[slug]` — breed detail (slug from Name)
+- `/` — home
+- `/breeds` — Ready breeds (filters: type, origin, use)
+- `/breeds/[slug]` — breed detail
+- `/colors` — coat color library
+- `/colors/[slug]` — color detail + ID tips
+- `/features` — anatomy & markings
+- `/features/[slug]` — feature detail
+- `/quiz/colors` — coat color quiz
+
+## Scripts
+
+- `npm run dev` — development
+- `npm run build` — production build (Vercel / Node)
+- `npm run start` — serve Node production build (not used on Pages)
+- `npm run lint` — ESLint

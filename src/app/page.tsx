@@ -4,23 +4,29 @@ import { PageShell } from "@/components/page-shell";
 export default function Home() {
   return (
     <PageShell>
-      <main className="relative z-10 mx-auto flex w-full max-w-3xl flex-1 flex-col justify-center px-6 py-20 sm:px-10">
-        <p className="text-5xl font-semibold tracking-tight text-[var(--brand)] sm:text-6xl">
+      <main className="relative z-10 mx-auto flex w-full max-w-5xl flex-1 flex-col justify-center px-6 py-16 sm:px-10 sm:py-24">
+        <p className="animate-fade-up font-display text-6xl font-semibold tracking-tight text-[var(--brand)] sm:text-7xl md:text-8xl">
           Horse Edu
         </p>
-        <h1 className="mt-6 max-w-xl text-2xl font-medium leading-snug text-[var(--foreground)] sm:text-3xl">
-          Learn horsemanship with clarity and care.
+        <h1 className="animate-fade-up-delay mt-6 max-w-2xl font-display text-2xl font-medium leading-snug text-[var(--foreground)] sm:text-3xl">
+          Breeds, colors, and features—built for curious riders.
         </h1>
-        <p className="mt-4 max-w-lg text-base leading-relaxed text-[var(--muted)] sm:text-lg">
-          A home for practical lessons, stable skills, and confident riding —
-          built for students and instructors.
+        <p className="animate-fade-up-delay-2 mt-4 max-w-xl text-base leading-relaxed text-[var(--muted)] sm:text-lg">
+          Explore Ready breed pages, learn coat colors and markings with
+          identification tips, then test yourself on the colors quiz.
         </p>
-        <div className="mt-10 flex flex-wrap gap-4">
+        <div className="animate-fade-up-delay-2 mt-10 flex flex-wrap gap-4">
           <Link
-            href="/breeds"
-            className="inline-flex h-11 items-center justify-center rounded-md bg-[var(--brand)] px-6 text-sm font-medium text-white transition-colors hover:bg-[var(--brand-hover)]"
+            href="/breeds/"
+            className="inline-flex h-12 items-center justify-center bg-[var(--brand)] px-7 text-sm font-semibold text-white transition-transform hover:bg-[var(--brand-hover)] hover:scale-[1.02]"
           >
             Explore breeds
+          </Link>
+          <Link
+            href="/quiz/colors/"
+            className="inline-flex h-12 items-center justify-center border border-[var(--brand)]/30 bg-[var(--surface)] px-7 text-sm font-semibold text-[var(--brand)] transition-colors hover:border-[var(--brand)]"
+          >
+            Try the colors quiz
           </Link>
         </div>
       </main>

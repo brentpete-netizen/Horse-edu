@@ -1,41 +1,30 @@
 import type { Metadata } from "next";
-import { Suspense } from "react";
 import { BreedsList } from "@/components/breeds-list";
 import { PageShell } from "@/components/page-shell";
 
 export const metadata: Metadata = {
   title: "Horse breeds · Horse Edu",
   description:
-    "Explore horse breeds ready for learning — type, origin, and practical notes.",
+    "Explore horse breeds — filter by type, origin, and primary use.",
 };
-
-function BreedsFallback() {
-  return (
-    <p className="py-8 text-[var(--muted)]" aria-live="polite">
-      Loading breeds…
-    </p>
-  );
-}
 
 export default function BreedsPage() {
   return (
     <PageShell>
-      <main className="mx-auto w-full max-w-3xl px-6 py-14 sm:px-10 sm:py-20">
-        <p className="text-sm font-medium uppercase tracking-wide text-[var(--brand)]">
+      <main className="mx-auto w-full max-w-5xl px-6 py-14 sm:px-10 sm:py-20">
+        <p className="text-sm font-semibold uppercase tracking-wide text-[var(--brand)]">
           Library
         </p>
-        <h1 className="mt-3 text-3xl font-semibold tracking-tight text-[var(--foreground)] sm:text-4xl">
+        <h1 className="font-display mt-3 text-4xl font-semibold tracking-tight text-[var(--foreground)] sm:text-5xl">
           Horse breeds
         </h1>
         <p className="mt-3 max-w-xl text-base leading-relaxed text-[var(--muted)]">
-          Browse Ready breeds by type, origin, or primary use. Data comes from
-          Notion when connected, or from local exports in{" "}
-          <code className="text-[var(--brand)]">content/breeds</code>.
+          Browse Ready breeds by type, origin, or primary use. On GitHub Pages
+          this uses local exports; on Vercel you can connect Notion for live
+          Ready rows.
         </p>
         <div className="mt-10">
-          <Suspense fallback={<BreedsFallback />}>
-            <BreedsList />
-          </Suspense>
+          <BreedsList />
         </div>
       </main>
     </PageShell>

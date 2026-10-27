@@ -1,8 +1,13 @@
 import type { Metadata } from "next";
-import { DM_Sans } from "next/font/google";
+import { Fraunces, Nunito_Sans } from "next/font/google";
 import "./globals.css";
 
-const sans = DM_Sans({
+const display = Fraunces({
+  variable: "--font-display",
+  subsets: ["latin"],
+});
+
+const sans = Nunito_Sans({
   variable: "--font-sans",
   subsets: ["latin"],
 });
@@ -10,13 +15,16 @@ const sans = DM_Sans({
 export const metadata: Metadata = {
   title: "Horse Edu",
   description:
-    "Learn horsemanship with clarity and care — lessons for students and instructors.",
+    "A fresh educational site for horse breeds, coat colors, markings, and anatomy.",
 };
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={`${sans.variable} h-full antialiased`}>
-      <body className="min-h-full flex flex-col font-sans">{children}</body>
+    <html
+      lang="en"
+      className={`${display.variable} ${sans.variable} h-full antialiased`}
+    >
+      <body className="flex min-h-full flex-col font-sans">{children}</body>
     </html>
   );
 }

@@ -1,21 +1,66 @@
 @import "tailwindcss";
 
 :root {
-  --background: #e8efe6;
-  --foreground: #152018;
-  --muted: #3e4f42;
-  --brand: #1f4d36;
-  --brand-hover: #163a29;
+  --background: #e6f0e4;
+  --foreground: #142018;
+  --muted: #3a4d40;
+  --brand: #1a5c3a;
+  --brand-hover: #13452c;
+  --accent: #e8a54b;
+  --surface: rgba(255, 255, 255, 0.55);
+  --ring: rgba(26, 92, 58, 0.35);
 }
 
 @theme inline {
   --color-background: var(--background);
   --color-foreground: var(--foreground);
   --font-sans: var(--font-sans);
+  --font-display: var(--font-display);
 }
 
 body {
   background: var(--background);
   color: var(--foreground);
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+.font-display {
+  font-family: var(--font-display), var(--font-sans), ui-sans-serif, system-ui, sans-serif;
+}
+
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(12px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes soft-pulse {
+  0%,
+  100% {
+    opacity: 0.55;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 0.7s ease-out both;
+}
+
+.animate-fade-up-delay {
+  animation: fade-up 0.7s ease-out 0.12s both;
+}
+
+.animate-fade-up-delay-2 {
+  animation: fade-up 0.7s ease-out 0.24s both;
+}
+
+.animate-soft-pulse {
+  animation: soft-pulse 6s ease-in-out infinite;
 }

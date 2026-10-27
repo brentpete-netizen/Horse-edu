@@ -1,7 +1,7 @@
-import { connection } from "next/server";
 import { BreedsBrowse } from "@/components/breeds-browse";
 import { getLocalReadyBreeds } from "@/lib/breeds/content";
 import { getReadyBreeds } from "@/lib/breeds/notion";
+import { allowNotionBreeds } from "@/lib/site-mode";
 import type { Breed } from "@/lib/breeds/types";
 
 async function loadBrowseBreeds(): Promise<{
@@ -9,9 +9,11 @@ async function loadBrowseBreeds(): Promise<{
   source: "notion" | "local";
   message?: string;
 }> {
-  const notion = await getReadyBreeds();
-  if (notion.status === "ok" && notion.breeds.length > 0) {
-    return { breeds: notion.breeds, source: "notion" };
+  if (allowNotionBreeds()) {
+    const notion = await getReadyBreeds();
+    if (notion.status === "ok" && notion.breeds.length > 0) {
+      return { breeds: notion.breeds, source: "notion" };
+    }
   }
 
   const local = await getLocalReadyBreeds();
@@ -19,33 +21,15 @@ async function loadBrowseBreeds(): Promise<{
     return { breeds: local, source: "local" };
   }
 
-  if (notion.status === "missing_credentials") {
-    return {
-      breeds: [],
-      source: "local",
-      message:
-        "No local breed pages in content/breeds, and Notion is not connected. Add Ready markdown exports or set NOTION_API_KEY.",
-    };
-  }
-
-  if (notion.status === "error") {
-    return {
-      breeds: [],
-      source: "local",
-      message: notion.message ?? "Could not load breeds.",
-    };
-  }
-
   return {
     breeds: [],
     source: "local",
     message:
-      "No Ready breeds yet. Mark a breed Ready in Notion, or add a markdown export under content/breeds.",
+      "No Ready breeds yet. Add markdown under content/breeds, or set NOTION_API_KEY for live Notion (Vercel).",
   };
 }
 
 export async function BreedsList() {
-  await connection();
   const { breeds, source, message } = await loadBrowseBreeds();
 
   if (breeds.length === 0) {
