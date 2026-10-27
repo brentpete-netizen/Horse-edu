@@ -3,6 +3,7 @@ import Link from "next/link";
 import { notFound } from "next/navigation";
 import { connection } from "next/server";
 import type { ReactNode } from "react";
+import { getLocalReadyBreedBySlug } from "@/lib/breeds/content";
 import { getReadyBreedBySlug } from "@/lib/breeds/notion";
 
 function Section({
@@ -37,17 +38,19 @@ function MetaRow({ label, value }: { label: string; value: string | null }) {
 
 export async function BreedDetail({ slug }: { slug: string }) {
   await connection();
-  const { breed, status, message } = await getReadyBreedBySlug(slug);
+  const { breed: notionBreed, status, message } =
+    await getReadyBreedBySlug(slug);
+  const breed = notionBreed ?? (await getLocalReadyBreedBySlug(slug));
 
-  if (status === "missing_credentials") {
+  if (!breed && status === "missing_credentials") {
     return (
       <div className="rounded-md border border-[var(--brand)]/15 bg-white/40 px-5 py-6 text-[var(--muted)]">
         <p className="font-medium text-[var(--foreground)]">
-          Breed library not connected
+          Breed not found
         </p>
         <p className="mt-2 text-sm leading-relaxed">
           {message ??
-            "Configure NOTION_API_KEY to load breed pages. See .env.example."}
+            "No local export for this slug, and Notion is not connected."}
         </p>
         <Link
           href="/breeds"
@@ -59,7 +62,7 @@ export async function BreedDetail({ slug }: { slug: string }) {
     );
   }
 
-  if (status === "error") {
+  if (!breed && status === "error") {
     return (
       <div className="rounded-md border border-red-900/15 bg-white/40 px-5 py-6 text-[var(--muted)]">
         <p className="font-medium text-[var(--foreground)]">

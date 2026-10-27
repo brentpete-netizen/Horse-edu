@@ -28,7 +28,9 @@ export default function BreedsPage() {
           Horse breeds
         </h1>
         <p className="mt-3 max-w-xl text-base leading-relaxed text-[var(--muted)]">
-          Published breeds from our Notion library — Status Ready only.
+          Browse Ready breeds by type, origin, or primary use. Data comes from
+          Notion when connected, or from local exports in{" "}
+          <code className="text-[var(--brand)]">content/breeds</code>.
         </p>
         <div className="mt-10">
           <Suspense fallback={<BreedsFallback />}>
