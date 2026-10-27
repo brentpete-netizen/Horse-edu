@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { EducationalArt } from "@/components/educational-art";
 import { FeatureDiagram } from "@/components/feature-diagram";
 import { PageShell } from "@/components/page-shell";
+import { resolveArtPath } from "@/lib/art-paths";
 import { getAllFeatures, getFeatureBySlug } from "@/lib/features/catalog";
 
 type Props = { params: Promise<{ slug: string }> };
@@ -44,10 +46,17 @@ export default async function FeatureDetailPage({ params }: Props) {
         </h1>
         <p className="mt-4 text-lg leading-relaxed">{feature.summary}</p>
 
-        <div className="mt-10 border border-[var(--brand)]/12 bg-[var(--surface)] p-4 sm:p-6">
-          <FeatureDiagram
-            feature={feature}
-            className="mx-auto h-56 w-full max-w-md text-[var(--foreground)]"
+        <div className="mt-10 border border-[var(--brand)]/12 bg-[var(--surface)] p-4 sm:p-8">
+          <EducationalArt
+            artSrc={resolveArtPath("features", feature.slug)}
+            alt={`${feature.name} diagram`}
+            imageClassName="relative mx-auto aspect-[4/3] w-full max-w-lg overflow-hidden"
+            fallback={
+              <FeatureDiagram
+                feature={feature}
+                className="mx-auto h-64 w-full max-w-lg text-[var(--foreground)]"
+              />
+            }
           />
         </div>
 

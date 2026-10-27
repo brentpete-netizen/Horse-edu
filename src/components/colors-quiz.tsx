@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import Link from "next/link";
+import { EducationalArt } from "@/components/educational-art";
 import { HorseColorIllustration } from "@/components/horse-color-illustration";
 import type { CoatColor } from "@/lib/colors/catalog";
 
@@ -21,7 +22,14 @@ function choicesFor(correct: CoatColor, pool: CoatColor[]): string[] {
   return shuffle([correct.name, ...wrong]);
 }
 
-export function ColorsQuiz({ colors }: { colors: CoatColor[] }) {
+export function ColorsQuiz({
+  colors,
+  artBySlug = {},
+}: {
+  colors: CoatColor[];
+  /** Optional Grok art paths keyed by color slug */
+  artBySlug?: Record<string, string | null>;
+}) {
   const [index, setIndex] = useState(0);
   const [score, setScore] = useState(0);
   const [picked, setPicked] = useState<string | null>(null);
@@ -104,9 +112,16 @@ export function ColorsQuiz({ colors }: { colors: CoatColor[] }) {
       </h2>
 
       <div className="mt-8 border border-[var(--brand)]/12 bg-[var(--surface)] p-4 sm:p-6">
-        <HorseColorIllustration
-          color={current}
-          className="mx-auto h-52 w-full max-w-md text-[var(--foreground)]"
+        <EducationalArt
+          artSrc={artBySlug[current.slug] ?? null}
+          alt={`${current.name} coat illustration`}
+          imageClassName="relative mx-auto aspect-[4/3] w-full max-w-md overflow-hidden"
+          fallback={
+            <HorseColorIllustration
+              color={current}
+              className="mx-auto h-52 w-full max-w-md text-[var(--foreground)]"
+            />
+          }
         />
       </div>
 

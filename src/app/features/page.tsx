@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { EducationalArt } from "@/components/educational-art";
 import { FeatureDiagram } from "@/components/feature-diagram";
 import { PageShell } from "@/components/page-shell";
-import { featuresByKind } from "@/lib/features/catalog";
+import { resolveArtPath } from "@/lib/art-paths";
+import { featuresByKind, type FeatureKind } from "@/lib/features/catalog";
 
 export const metadata: Metadata = {
   title: "Distinctive features · Horse Edu",
@@ -15,7 +17,7 @@ function FeatureGroup({
   kind,
 }: {
   title: string;
-  kind: "anatomy" | "marking";
+  kind: FeatureKind;
 }) {
   const items = featuresByKind(kind);
   return (
@@ -24,25 +26,38 @@ function FeatureGroup({
         {title}
       </h2>
       <ul className="mt-6 grid gap-5 sm:grid-cols-2">
-        {items.map((feature) => (
-          <li key={feature.slug}>
-            <Link
-              href={`/features/${feature.slug}/`}
-              className="group block border border-[var(--brand)]/12 bg-[var(--surface)] p-4 transition-transform hover:scale-[1.01] hover:border-[var(--brand)]/35"
-            >
-              <FeatureDiagram
-                feature={feature}
-                className="h-36 w-full text-[var(--foreground)]"
-              />
-              <h3 className="font-display mt-3 text-lg font-semibold text-[var(--brand)] group-hover:underline">
-                {feature.name}
-              </h3>
-              <p className="mt-1 text-sm leading-relaxed text-[var(--muted)]">
-                {feature.summary}
-              </p>
-            </Link>
-          </li>
-        ))}
+        {items.map((feature) => {
+          const artSrc = resolveArtPath("features", feature.slug);
+          return (
+            <li key={feature.slug}>
+              <Link
+                href={`/features/${feature.slug}/`}
+                className="group flex h-full flex-col border border-[var(--brand)]/12 bg-[var(--surface)] p-4 transition-transform hover:scale-[1.01] hover:border-[var(--brand)]/35"
+              >
+                <EducationalArt
+                  artSrc={artSrc}
+                  alt={`${feature.name} diagram`}
+                  className="min-h-[9rem]"
+                  fallback={
+                    <FeatureDiagram
+                      feature={feature}
+                      className="h-40 w-full text-[var(--foreground)]"
+                    />
+                  }
+                />
+                <h3 className="font-display mt-3 text-lg font-semibold text-[var(--brand)] group-hover:underline">
+                  {feature.name}
+                </h3>
+                <p className="mt-1 text-sm font-medium text-[var(--foreground)]">
+                  Spot it: {feature.idTips[0]}
+                </p>
+                <p className="mt-2 flex-1 text-sm leading-relaxed text-[var(--muted)]">
+                  {feature.summary}
+                </p>
+              </Link>
+            </li>
+          );
+        })}
       </ul>
     </section>
   );

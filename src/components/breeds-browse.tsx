@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
 import type { Breed } from "@/lib/breeds/types";
@@ -42,6 +43,32 @@ function SelectFilter({
         ))}
       </select>
     </label>
+  );
+}
+
+function BreedThumb({ breed }: { breed: Breed }) {
+  if (breed.imageUrl) {
+    return (
+      <div className="relative h-24 w-28 shrink-0 overflow-hidden bg-[var(--brand)]/10 sm:h-28 sm:w-36">
+        <Image
+          src={breed.imageUrl}
+          alt=""
+          fill
+          className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"
+          sizes="144px"
+          unoptimized
+        />
+      </div>
+    );
+  }
+
+  return (
+    <div
+      aria-hidden
+      className="flex h-24 w-28 shrink-0 items-center justify-center bg-[var(--brand)]/10 text-xs font-medium uppercase tracking-wide text-[var(--brand)]/50 sm:h-28 sm:w-36"
+    >
+      Horse Edu
+    </div>
   );
 }
 
@@ -141,24 +168,29 @@ export function BreedsBrowse({
           {filtered.map((breed) => (
             <li key={breed.id}>
               <Link
-                href={`/breeds/${breed.slug}`}
-                className="group block py-6 transition-colors hover:bg-white/30"
+                href={`/breeds/${breed.slug}/`}
+                className="group flex gap-4 py-5 transition-colors hover:bg-white/30 sm:gap-5"
               >
-                <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
-                  <h2 className="text-xl font-semibold tracking-tight text-[var(--brand)] group-hover:underline">
-                    {breed.name}
-                  </h2>
-                  {(breed.type || breed.origin) && (
-                    <p className="text-sm text-[var(--muted)]">
-                      {[breed.type, breed.origin].filter(Boolean).join(" · ")}
+                <BreedThumb breed={breed} />
+                <div className="min-w-0 flex-1">
+                  <div className="flex flex-wrap items-baseline gap-x-3 gap-y-1">
+                    <h2 className="font-display text-xl font-semibold tracking-tight text-[var(--brand)] group-hover:underline">
+                      {breed.name}
+                    </h2>
+                    {(breed.type || breed.origin) && (
+                      <p className="text-sm text-[var(--muted)]">
+                        {[breed.type, breed.origin]
+                          .filter(Boolean)
+                          .join(" · ")}
+                      </p>
+                    )}
+                  </div>
+                  {breed.shortDescription && (
+                    <p className="mt-2 max-w-2xl text-base leading-relaxed text-[var(--foreground)]/90">
+                      {breed.shortDescription}
                     </p>
                   )}
                 </div>
-                {breed.shortDescription && (
-                  <p className="mt-2 max-w-2xl text-base leading-relaxed text-[var(--foreground)]/90">
-                    {breed.shortDescription}
-                  </p>
-                )}
               </Link>
             </li>
           ))}

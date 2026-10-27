@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { ColorsQuiz } from "@/components/colors-quiz";
 import { PageShell } from "@/components/page-shell";
+import { resolveArtPathMap } from "@/lib/art-paths";
 import { getAllColors } from "@/lib/colors/catalog";
 
 export const metadata: Metadata = {
@@ -11,6 +12,10 @@ export const metadata: Metadata = {
 
 export default function ColorsQuizPage() {
   const colors = getAllColors();
+  const artBySlug = resolveArtPathMap(
+    "colors",
+    colors.map((c) => c.slug),
+  );
 
   return (
     <PageShell>
@@ -30,7 +35,7 @@ export default function ColorsQuizPage() {
           first if you like.
         </p>
         <div className="mt-10">
-          <ColorsQuiz colors={colors} />
+          <ColorsQuiz colors={colors} artBySlug={artBySlug} />
         </div>
       </main>
     </PageShell>

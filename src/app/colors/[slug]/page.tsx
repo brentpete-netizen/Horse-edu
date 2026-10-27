@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { EducationalArt } from "@/components/educational-art";
 import { HorseColorIllustration } from "@/components/horse-color-illustration";
 import { PageShell } from "@/components/page-shell";
-import { getAllColors, getColorBySlug } from "@/lib/colors/catalog";
+import { resolveArtPath } from "@/lib/art-paths";
 import { getLocalReadyBreeds } from "@/lib/breeds/content";
+import { getAllColors, getColorBySlug } from "@/lib/colors/catalog";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -57,10 +59,17 @@ export default async function ColorDetailPage({ params }: Props) {
           </p>
         </header>
 
-        <div className="mt-10 border border-[var(--brand)]/12 bg-[var(--surface)] p-4 sm:p-6">
-          <HorseColorIllustration
-            color={color}
-            className="mx-auto h-56 w-full max-w-md text-[var(--foreground)]"
+        <div className="mt-10 border border-[var(--brand)]/12 bg-[var(--surface)] p-4 sm:p-8">
+          <EducationalArt
+            artSrc={resolveArtPath("colors", color.slug)}
+            alt={`${color.name} coat illustration`}
+            imageClassName="relative mx-auto aspect-[4/3] w-full max-w-lg overflow-hidden"
+            fallback={
+              <HorseColorIllustration
+                color={color}
+                className="mx-auto h-64 w-full max-w-lg text-[var(--foreground)]"
+              />
+            }
           />
         </div>
 
