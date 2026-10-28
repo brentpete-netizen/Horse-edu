@@ -6,7 +6,11 @@ import { HorseColorIllustration } from "@/components/horse-color-illustration";
 import { PageShell } from "@/components/page-shell";
 import { resolveArtPath } from "@/lib/art-paths";
 import { getLocalReadyBreeds } from "@/lib/breeds/content";
-import { getAllColors, getColorBySlug } from "@/lib/colors/catalog";
+import {
+  colorSlugFromName,
+  getAllColors,
+  getColorBySlug,
+} from "@/lib/colors/catalog";
 
 type Props = { params: Promise<{ slug: string }> };
 
@@ -31,13 +35,20 @@ export default async function ColorDetailPage({ params }: Props) {
 
   const breeds = await getLocalReadyBreeds();
   const related = breeds.filter((b) =>
-    b.typicalColors.some(
-      (n) =>
-        n.toLowerCase() === color.name.toLowerCase() ||
-        (color.slug === "paint" && n.toLowerCase() === "paint") ||
-        (color.slug === "appaloosa" && n.toLowerCase() === "appaloosa") ||
-        (color.slug === "gray" && n.toLowerCase() === "gray"),
-    ),
+    b.typicalColors.some((n) => {
+      const mapped = colorSlugFromName(n);
+      if (mapped === color.slug) return true;
+      const lower = n.toLowerCase();
+      return (
+        lower === color.name.toLowerCase() ||
+        lower === color.slug.replaceAll("_", " ") ||
+        (color.slug === "paint" && lower.includes("paint")) ||
+        (color.slug === "appaloosa" && lower.includes("appaloosa")) ||
+        (color.slug === "leopard_appaloosa" && lower.includes("appaloosa")) ||
+        (color.slug === "overo_pinto" &&
+          (lower.includes("overo") || lower.includes("paint")))
+      );
+    }),
   );
 
   return (

@@ -68,6 +68,42 @@ export function HorseColorIllustration({
         </g>
       )}
 
+      {/* Overo-style irregular white (face + side; topline often darker) */}
+      {pattern === "overo" && (
+        <g clipPath={`url(#horse-${color.slug})`} opacity="0.95">
+          <ellipse cx="248" cy="88" rx="22" ry="18" fill="#F7F4EF" />
+          <path
+            d="M70 140 C100 100, 140 150, 170 125 C200 100, 230 140, 250 130 L240 170 C200 160, 160 180, 120 165 Z"
+            fill="#F7F4EF"
+          />
+        </g>
+      )}
+
+      {/* Classic roan: white ticking on body; head/legs stay base color */}
+      {pattern === "roan" && (
+        <g clipPath={`url(#horse-${color.slug})`} opacity="0.55">
+          {[
+            [100, 120],
+            [115, 110],
+            [130, 125],
+            [145, 105],
+            [160, 118],
+            [175, 130],
+            [190, 112],
+            [205, 125],
+            [120, 140],
+            [155, 145],
+            [180, 150],
+            [110, 135],
+            [140, 115],
+            [165, 108],
+            [195, 140],
+          ].map(([cx, cy], i) => (
+            <circle key={i} cx={cx} cy={cy} r="3.5" fill="#F7F4EF" />
+          ))}
+        </g>
+      )}
+
       {/* Appaloosa blanket + spots */}
       {pattern === "blanket" && (
         <g clipPath={`url(#horse-${color.slug})`}>
