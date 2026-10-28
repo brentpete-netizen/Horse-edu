@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 import { BreedsList } from "@/components/breeds-list";
 import { PageShell } from "@/components/page-shell";
 
@@ -21,7 +22,11 @@ export default function BreedsPage() {
         <p className="mt-3 max-w-xl text-base leading-relaxed text-[var(--muted)]">
           Browse Ready breeds by type, origin, or primary use. On GitHub Pages
           this uses local exports; on Vercel you can connect Notion for live
-          Ready rows.
+          Ready rows.{" "}
+          <Link href="/quiz/breeds/" className="text-[var(--brand)] hover:underline">
+            Try the breeds quiz
+          </Link>
+          .
         </p>
         <div className="mt-10">
           <BreedsList />

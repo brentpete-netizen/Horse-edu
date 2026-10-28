@@ -13,7 +13,8 @@ export default function Home() {
         </h1>
         <p className="animate-fade-up-delay-2 mt-4 max-w-xl text-base leading-relaxed text-[var(--muted)] sm:text-lg">
           Explore Ready breed pages, learn coat colors and markings with
-          identification tips, then test yourself on the colors quiz.
+          identification tips, then test yourself on the colors and breeds
+          quizzes.
         </p>
         <div className="animate-fade-up-delay-2 mt-10 flex flex-wrap gap-4">
           <Link
@@ -23,10 +24,16 @@ export default function Home() {
             Explore breeds
           </Link>
           <Link
+            href="/quiz/breeds/"
+            className="inline-flex h-12 items-center justify-center border border-[var(--brand)]/30 bg-[var(--surface)] px-7 text-sm font-semibold text-[var(--brand)] transition-colors hover:border-[var(--brand)]"
+          >
+            Breeds quiz
+          </Link>
+          <Link
             href="/quiz/colors/"
             className="inline-flex h-12 items-center justify-center border border-[var(--brand)]/30 bg-[var(--surface)] px-7 text-sm font-semibold text-[var(--brand)] transition-colors hover:border-[var(--brand)]"
           >
-            Try the colors quiz
+            Colors quiz
           </Link>
         </div>
       </main>

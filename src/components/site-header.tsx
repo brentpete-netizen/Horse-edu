@@ -7,7 +7,8 @@ const LINKS = [
   { href: "/breeds/", label: "Breeds" },
   { href: "/colors/", label: "Colors" },
   { href: "/features/", label: "Features" },
-  { href: "/quiz/colors/", label: "Quiz" },
+  { href: "/quiz/colors/", label: "Colors quiz" },
+  { href: "/quiz/breeds/", label: "Breeds quiz" },
 ];
 
 export function SiteHeader() {
