@@ -2,10 +2,11 @@ import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import type { ReactNode } from "react";
+import { withBasePath } from "@/lib/base-path";
 import { getLocalReadyBreedBySlug } from "@/lib/breeds/content";
 import { getReadyBreedBySlug } from "@/lib/breeds/notion";
-import { allowNotionBreeds } from "@/lib/site-mode";
 import { colorSlugFromName } from "@/lib/colors/catalog";
+import { allowNotionBreeds } from "@/lib/site-mode";
 
 function Section({
   title,
@@ -103,7 +104,7 @@ export async function BreedDetail({ slug }: { slug: string }) {
       {breed.imageUrl && (
         <div className="relative mt-10 aspect-[16/10] w-full overflow-hidden bg-[var(--brand)]/10">
           <Image
-            src={breed.imageUrl}
+            src={withBasePath(breed.imageUrl)}
             alt={breed.name}
             fill
             className="object-cover"

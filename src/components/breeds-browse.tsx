@@ -3,6 +3,7 @@
 import Image from "next/image";
 import Link from "next/link";
 import { useMemo, useState } from "react";
+import { withBasePath } from "@/lib/base-path";
 import type { Breed } from "@/lib/breeds/types";
 
 const ALL = "all";
@@ -51,7 +52,7 @@ function BreedThumb({ breed }: { breed: Breed }) {
     return (
       <div className="relative h-24 w-28 shrink-0 overflow-hidden bg-[var(--brand)]/10 sm:h-28 sm:w-36">
         <Image
-          src={breed.imageUrl}
+          src={withBasePath(breed.imageUrl)}
           alt=""
           fill
           className="object-cover transition-transform duration-300 group-hover:scale-[1.03]"

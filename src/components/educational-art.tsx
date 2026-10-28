@@ -1,5 +1,6 @@
 import Image from "next/image";
 import type { ReactNode } from "react";
+import { withBasePath } from "@/lib/base-path";
 
 type EducationalArtProps = {
   /** Public path like /colors/bay.webp when Grok art is present */
@@ -23,7 +24,7 @@ export function EducationalArt({
     return (
       <div className={`${imageClassName} ${className}`}>
         <Image
-          src={artSrc}
+          src={withBasePath(artSrc)}
           alt={alt}
           fill
           className="object-contain p-2"

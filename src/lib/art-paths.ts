@@ -1,5 +1,6 @@
 import { existsSync } from "node:fs";
 import path from "node:path";
+import { withBasePath } from "@/lib/base-path";
 
 export type ArtKind = "colors" | "features";
 
@@ -20,7 +21,7 @@ function resolveFileStem(
 ): string | null {
   for (const ext of EXTS) {
     if (existsSync(path.join(dir, `${stem}${ext}`))) {
-      return `/${kind}/${stem}${ext}`;
+      return withBasePath(`/${kind}/${stem}${ext}`);
     }
   }
   return null;

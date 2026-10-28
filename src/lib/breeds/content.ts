@@ -1,5 +1,6 @@
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
+import { withBasePath } from "@/lib/base-path";
 import { slugifyBreedName } from "./slug";
 import type { Breed } from "./types";
 
@@ -66,11 +67,11 @@ function sourcesPlain(markdown: string): string | null {
 function imageUrlFromMarkdown(markdown: string): string | null {
   const imageSection = sectionBody(markdown, "Image notes") ?? "";
   const mdImage = imageSection.match(/!\[[^\]]*\]\(([^)\s]+)\)/);
-  if (mdImage?.[1]) return mdImage[1].trim();
+  if (mdImage?.[1]) return withBasePath(mdImage[1].trim());
 
   const tableImage = tableValue(markdown, "Image");
   if (tableImage && (/^https?:\/\//i.test(tableImage) || tableImage.startsWith("/"))) {
-    return tableImage;
+    return withBasePath(tableImage);
   }
   return null;
 }

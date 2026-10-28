@@ -5,6 +5,10 @@ const isGitHubPages = process.env.GITHUB_PAGES === "true";
 const basePath = isGitHubPages ? "/Horse-edu" : "";
 
 const nextConfig: NextConfig = {
+  // next/image does not always prefix basePath for unoptimized static assets
+  env: {
+    NEXT_PUBLIC_BASE_PATH: basePath,
+  },
   ...(isGitHubPages
     ? {
         output: "export" as const,
