@@ -5,13 +5,36 @@ export type ArtKind = "colors" | "features";
 
 const EXTS = [".webp", ".png", ".jpg", ".jpeg"] as const;
 
+/** When Grok export names differ from catalog slugs, try these stems too. */
+const ART_FILE_ALIASES: Partial<Record<ArtKind, Record<string, string[]>>> = {
+  colors: {
+    paint: ["tobiano_pinto", "overo_pinto"],
+    appaloosa: ["appaloosa_blanket", "leopard_appaloosa"],
+  },
+};
+
+function resolveFileStem(
+  kind: ArtKind,
+  dir: string,
+  stem: string,
+): string | null {
+  for (const ext of EXTS) {
+    if (existsSync(path.join(dir, `${stem}${ext}`))) {
+      return `/${kind}/${stem}${ext}`;
+    }
+  }
+  return null;
+}
+
 /** Public URL for Grok Imagine art if the file exists under public/{kind}/. */
 export function resolveArtPath(kind: ArtKind, slug: string): string | null {
   const dir = path.join(process.cwd(), "public", kind);
-  for (const ext of EXTS) {
-    if (existsSync(path.join(dir, `${slug}${ext}`))) {
-      return `/${kind}/${slug}${ext}`;
-    }
+  const direct = resolveFileStem(kind, dir, slug);
+  if (direct) return direct;
+
+  for (const alias of ART_FILE_ALIASES[kind]?.[slug] ?? []) {
+    const hit = resolveFileStem(kind, dir, alias);
+    if (hit) return hit;
   }
   return null;
 }
